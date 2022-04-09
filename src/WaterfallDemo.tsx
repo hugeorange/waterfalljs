@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-// import Waterfall from './react'
-import Waterfall from 'waterfalljs-layout/react'
+import Waterfall from './react'
+// import Waterfall from 'waterfalljs-layout/react'
 
 const customStyle = `#waterfall li>div {
   border-radius: 8px;

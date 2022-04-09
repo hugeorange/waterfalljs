@@ -1,6 +1,6 @@
 {
   "name": "waterfalljs-layout",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "原生js实现瀑布流布局",
   "main": "dist/waterfalljs-layout.cjs.js",
   "module": "dist/waterfalljs-layout.esm.js",
