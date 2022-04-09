@@ -5,7 +5,7 @@
 1. 直接cdn引入
     ```js
     // 示例代码: https://github.com/hugeorange/waterfalljs/blob/master/src/index.html
-    <script src="/dist/waterfalljs-layout.min.js"></script>
+    <script src="https://unpkg.com/browse/waterfalljs-layout@latest/dist/waterfalljs-layout.esm.js"></script>
     <script>
         const wf = new Waterfall({
             el: '#waterfall',
@@ -40,7 +40,7 @@
     ```
 2. ESModule 引入
     ```js
-    // yarn add waterfall-js
+    // yarn add waterfalljs-layout
 
     import waterfalljs from 'waterfalljs-layout'
     const wf = new Waterfall({/** ... */})
