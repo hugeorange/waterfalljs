@@ -1,62 +1,58 @@
-# BulletJs
-> 😀一个原生js弹幕库，基于 CSS3 Animation
-- [segmentFault文章地址](https://segmentfault.com/a/1190000021719074) 
-- [项目地址](https://github.com/hugeorange/BulletJs) 
-- 本项目灵感来源于 [rc-bullets](https://github.com/zerosoul/rc-bullets)
-- [演示页面](https://hugeorange.github.io/gh-pages/bullets/index) `https://hugeorange.github.io/gh-pages/bullets/index`
-- 演示图 ![danmuku.gif](https://pic2.zhimg.com/80/v2-bc6041f8b0e696767fac56fc48c91206_1440w.gif)
-### 更新日志
-> 2021-01-22更新
-- 全局增加`isAllPaused`标志，当全部暂停后不会再有push或是render，`resume` 之后即可恢复
-- 问题：`切记：不可覆盖内部样式类 bullet-item-style `否则可能会出现弹幕重叠问题
-- 增加演示页面
-> 2020-08-24更新
-- 源码采用ts书写，增加 `.d.ts` 文件
-- 采用rollup打包并发布到npm，[rollup打包教程](https://chenshenhai.github.io/rollupjs-note/note/chapter03/01.html)
-- 去除靠`IntersectionObserver`来对弹道进行调度，采用新的弹道选择算法，增加防重叠检测
-- 支持同速/不同速弹幕
-- 默认情况下直接丢弃排不上对的弹幕，不对其进行缓存，对于必定要上墙的弹幕在push时可以增加一个参数 `this.screen.push(danmu, {}, true)`(适用于用户自己发的弹幕，需要将第三个参数传为`true`)
-- 变更名字，想想用拼音起名还是太low了😂😂😂
-  
+# waterfall-js 原生js实现的瀑布流布局
+- 演示图 ![waterfalljs](./src/waterfallGif.gif)
 ### 使用方式
 
 1. 直接cdn引入
-    ```
-    // 示例代码: https://github.com/hugeorange/BulletJs/blob/master/src/index.html
-    <script src="https://unpkg.com/js-bullets@latest/dist/BulletJs.min.js"></script>
+    ```js
+    // 示例代码: https://github.com/hugeorange/waterfalljs/blob/master/src/index.html
+    <script src="/dist/waterfalljs-layout.min.js"></script>
     <script>
-    const screen = new BulletJs('.screen', { 
-                      trackHeight: 35 
-                    });
-    </script>
+        const wf = new Waterfall({
+            el: '#waterfall',
+            columnWidth: 236,
+            gap: 24,
+            delay: 800,
+            // 自定义样式按需使用
+            customStyle: `#waterfall li>div {
+                    border-radius: 8px;
+                    font-size: 20px;
+                    overflow: hidden;
+                    color: rgba(0, 0, 0, 0.6);
+                    margin-bottom: 20px;
+                    padding: 6px;
+                    background: rgb(255, 255, 255);
+                    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+                    transition: all 0.5s
+                }
+                #waterfall li>div:hover {
+                    transform: translateY(-6px);
+                    box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+                    transition: all 0.3s
+                }
+                #waterfall li>div>img {
+                    width: 100%
+                }`
+        })
+        // 初始化时执行布局 执行布局
+	    wf.init()
+        // 加载更多场景时时请调用 
+        wf.loadMore()
     ```
 2. ESModule 引入
-    ```
-    yarn add js-bullets
+    ```js
+    // yarn add waterfall-js
 
-    // react
-    import BulletJs from "js-bullets";
-
-    componentDidMount() {
-        this.screen = new BulletJs("#danmu-screen", {})
-
-        setInterval(() => {
-            this.screen.push('<span>12222222</span>')
-        }, 1000)
-    }
+    import waterfalljs from 'waterfalljs-layout'
+    const wf = new Waterfall({/** ... */})
+    // 初始化
+    wf.init()
+    // 加载更多时
+    wf.loadMore()
     ```
 
-3. 简单粗暴的办法直接拷贝`comps`目录下的代码到你的项目中使用，vue、react项目均可
+3. 简单粗暴的办法直接拷贝`src/index.ts`目录下的代码到你的项目中使用，vue、react项目均可
 
 ---
-
-- 项目产生原因：
-  - 因为`rc-bullets` 是基于 `React`，可能很多使用其他框架的同学没法使用
-  - 新增了 `speed` 参数，让所有弹幕以相同速度运动（自己项目的需要）
-  - 在`animationEnd`的时候增加了轨道置空处理
-  - 对 `queues` 队列的处理方式不同
-  - 弹幕格式 `dom 字符串`
-  - 去掉了一些自己项目用不到的 api
 
 ## API
 
@@ -64,29 +60,10 @@
 
 | 选项           | 含义               | 值类型        | 默认值      | 备注 |
 | -------------- | ------------------ | ------------- | ----------- | -------------------------- |
-| trackHeight    | 轨道高度           | string        | 50px        | 均分轨道的高度  |
-| onStart        | 自定义动画开始函数 | function      | null        | 开始开始回调 |
-| onEnd          | 自定义动画结束函数 | function      | null        | 弹幕运动结束回调 |
-| pauseOnClick   | 鼠标点击暂停       | boolean       | false       | 再次点击继续        |
-| pauseOnHover   | 鼠标悬停暂停       | boolean       | true        | 鼠标进入暂停，离开继续    |
-| duration       | 滚动时长           | string        | 10s          | `传入speed该参数无效`|
-| speed          | 滚动速度           | number        | 100          | `100px/s` 或 `null` 传入`null` 会根据 `duration`参数自动控制速度，弹幕越长速度越快    |
-
-
-- 暂停弹幕：`screen.pause([<bulletId>])`，无参则暂停全部
-- 弹幕继续：`screen.resume([<bulletId>])`，无参则继续全部
-
-
-## 注意事项
-- 弹幕原理：利用 `css3 animation 关键帧动画`, 从左移动到右，`duration` 控制速度
-    ```css
-    @keyframe name {
-        from { transform: translateX(width px) }
-        to { transform: translateX(-100%) }
-    }
-    ```
-- [弹幕防重叠原理](https://www.zhihu.com/question/370464345)
-  ![原理图](https://github.com/hugeorange/BulletJs/blob/master/src/image/screen.png)
-
-
-- 另外一点需要注意的：我在项目里从接口里读出来数据每页20条，每隔 1s 去发一条弹幕（用 setTimeout），这时有个问题，当页面休眠休眠时，会出现setTimeout堆积的情况，解决办法：用 [requestAnimationFrame](https://zhuanlan.zhihu.com/p/34868095)替代 setTimeout
+| el    | 容器元素id           | string        | #waterfall |容器必须是ul元素|
+| columnWidth | 每一列的宽度 | number        | 360        |   |
+| columnCount    |多少列         | number   | - | 不传会自动分配   |
+| gap    | 每列之间的间隙 | number |    |  500  |
+| delay    | 轮询排布的间隔时间 | number        | #waterfall        |   |
+| customStyle | 自定义样式 | string | -|   |
+| onChangeUlMaxH | 实时获取容器高度 | (h: number) => void  | - |可在上拉加载场景中使用|

@@ -1,10 +1,10 @@
 {
-  "name": "waterfalljs",
-  "version": "0.0.1",
+  "name": "waterfalljs-layout",
+  "version": "0.0.2",
   "description": "原生js实现瀑布流布局",
-  "main": "dist/waterfalljs.cjs.js",
-  "module": "dist/waterfalljs.esm.js",
-  "unpkg": "dist/waterfalljs.min.js",
+  "main": "dist/waterfalljs-layout.cjs.js",
+  "module": "dist/waterfalljs-layout.esm.js",
+  "unpkg": "dist/waterfalljs-layout.min.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "dev": "npm run clean && rollup -w -c",
@@ -15,7 +15,8 @@
   "author": "YAOLEI",
   "license": "MIT",
   "files": [
-    "dist"
+    "dist",
+    "src"
   ],
   "devDependencies": {
     "@babel/core": "^7.11.1",
