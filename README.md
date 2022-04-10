@@ -19,22 +19,21 @@
             // 自定义样式按需使用
             customStyle: ''
         })
-        // 初始化时执行布局 执行布局
-	    wf.init()
-        // 加载更多场景时时请调用 
+        // ..................................
+        // 初始化数据或加载更多场景时时调用 
         wf.loadMore()
     ```
 2. React 版本
     ```js
     // yarn add waterfalljs-layout
     import Waterfall from "waterfalljs-layout/react";
-    // 详细演示页面请参考上方 codesandbox 演示链接
+    // 详细演示页面请参考 https://codesandbox.io/s/busy-faraday-w538tc
     <Waterfall
         columnWidth={236}
         columnCount={2}
         gap={24}
         customStyle={customStyle}
-        onChangeUlMaxH={(h) => (ulMaxHRef.current = h)}
+        onChangeUlMaxH={(h) => console.log('ul容器高度-->', h)}
       >
         {images.map((item, index) => {
           return (
@@ -65,7 +64,7 @@
 | onChangeUlMaxH | 实时获取容器高度 | (h: number) => void  | - |可在上拉加载场景中使用|
 
 ## rollup 打包遇到的问题
-- 采用 rollup 多入口打包，分别打出无框架以来的核心 js 库，和 react 版本的库 - 配置文件详见 [rollup.config.js](./rollup.config.js)
+- 采用 rollup 多入口打包，分别打出无框架依赖的核心 js 库，和 react 版本的库 - 配置文件详见 [rollup.config.js](./rollup.config.js)，react 版本本地开发调试配置文件[rollup.config.react-dev.js](./rollup.config.react-dev.js)
 - 为了方便 核心 js库 引用及 react 版本没有区分目录，统一放在 src 根目录下，ts 自动生成 `.d.ts` 会根据文件名自动生成一个目录(并且会为所有文件生成 `.d.ts`) 如下图所示
 ![dts](./src/assets/dts.png)
 - package.json 怎么定义导出两个包，参考自 `swiper` 的定义方式 [Node.JS（新）Package.json exports 字段](https://www.cnblogs.com/taohuaya/p/15573719.html)

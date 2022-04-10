@@ -2,7 +2,6 @@
  * 瀑布流布局核心代码
  * 核心思路借鉴自 https://codepen.io/iounini/pen/KyYPKe
  */
-
  interface IwaterfallProps {
   /**
    * 绑定ul元素的id，ul元素需使用者自己创建
@@ -79,11 +78,11 @@ export default class Waterfall {
     // 辅助优化措施
     // 上一次获取图片数量
     this.prevImageLength = 0
+    
+    // 初始化配置
+    this.init()
   }
-  /**
-   * 初始化程序-首次加载
-   */
-  public init() {
+  private init() {
     if (!this.ul) {
       throw 'container ul element is not exist'
     }
@@ -94,13 +93,12 @@ export default class Waterfall {
 
     // 插入样式
     initWaterfallStyle(el, columnWidth, customStyle)
-    // 执行轮询刷新视图
-    this.initPolling()
   }
   /**
-   * 加载更多时调用，不必再调用 init
+   * 初始化数据或加载更多时调用
    */
   public loadMore() {
+    this.initLayout()
     this.initPolling()
   }
 
@@ -208,23 +206,22 @@ export default class Waterfall {
           reject('image unloded error')
         }
         if (image.complete) {
-          resolve('image unloded')
+          resolve('image has loded')
         }
       })
     })
     this.prevImageLength = imgs.length
     return Promise.allSettled(urlArrsPromise)
-      .then(res => console.log(res))
+      .then(res => res)
       .catch(err => console.log(err))
   }
   // 初始化轮询刷新视图，图片加载完成停止轮询
   private initPolling() {
-    this.initLayout()
     this.pollingRefresh()
 
     this.loadImages()
-      .then(() => {
-        console.log('图片全部成功加载')
+      .then((res) => {
+        console.log("图片加载任务全部完成-->", res);
         this.handleTimer && clearInterval(this.handleTimer)
         this.initLayout()
         setTimeout(() => {
@@ -232,7 +229,7 @@ export default class Waterfall {
         }, 20)
       })
       .catch(err => {
-        console.log('图片加载出错', err)
+        console.log("图片加载任务出错-->", err);
         this.handleTimer && clearInterval(this.handleTimer)
       })
   }

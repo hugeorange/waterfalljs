@@ -21,6 +21,7 @@ export default function WaterfallComps({
   const wfRef = useRef<any>()
 
   useEffect(() => {
+    if (wfRef.current) return
     wfRef.current = new Waterfall({
       el: '#waterfall',
       columnWidth: columnWidth,
@@ -32,14 +33,13 @@ export default function WaterfallComps({
         onChangeUlMaxH?.(h)
       },
     })
-    wfRef.current.init()
   }, [])
 
   useEffect(() => {
-    if (children?.length) {
-      wfRef.current.loadMore()
+    if (children.length) {
+      wfRef.current?.loadMore?.()
     }
-  }, [children?.length])
+  }, [children.length])
   
   return <ul id='waterfall'>{children}</ul>
 }

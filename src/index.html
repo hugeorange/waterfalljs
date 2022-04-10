@@ -31,9 +31,11 @@
 </style>
 
 <body>
-	<a href="https://codepen.io/iounini/pen/KyYPKe" target="_blank">核心思路来自这里</a><br />
-	<a
-		href="https://shuliqi.github.io/2020/11/17/%E7%80%91%E5%B8%83%E6%B5%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F">基本实现原理</a>
+	<div style="margin: 20px">
+		<a href="https://codepen.io/iounini/pen/KyYPKe" target="_blank">核心思路来自这里</a><br />
+		<a href="https://shuliqi.github.io/2020/11/17/%E7%80%91%E5%B8%83%E6%B5%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F"
+			target="_blank">基本实现原理</a>
+	</div>
 	<div class="modal">
 		<ul id="waterfall"></ul>
 		<div id="load-more">
@@ -41,9 +43,10 @@
 		</div>
 	</div>
 </body>
-<script src="https://unpkg.com/browse/waterfalljs-layout@latest/dist/waterfalljs-layout.esm.js"></script>
-<script src="../dist/waterfalljs-layout.min.js"></script>
 <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<!-- <script src="https://unpkg.com/browse/waterfalljs-layout@latest/dist/waterfalljs-layout.esm.js"></script> -->
+<script src="../dist/waterfalljs-layout.min.js"></script>
+
 <script type="text/javascript">
 	const images = [
 		"https://picsum.photos/640/200/?random",
@@ -61,26 +64,7 @@
 	function random(min, max) {
 		return min + Math.floor(Math.random() * (max - min + 1));
 	}
-
-	var num = 0
-	createView(images)
-
-	function createView(arr) {
-		var viewDom = ""
-		var templateDom = (index) => {
-			const imgSrc = `${images[index]}=${random(1, 10000)}`
-			num++
-			const image = ` <li><div><span>${num}</span><img src='${imgSrc}' /></div></li>`
-			const noImage = `<li><div style='height: ${random(100, 200)}px'><span>${num} --- 此block 没有图片</span></div></li>`
-			return Math.random() > 0.2 ? image : noImage
-		}
-		for (let i = 0; i < arr.length; i++) {
-			viewDom += templateDom(i)
-		}
-		$("#waterfall").append(viewDom)
-	}
-
-
+	// 初始化插件
 	const wf = new Waterfall({
 		el: '#waterfall',
 		columnWidth: 236,
@@ -106,8 +90,12 @@
 				width: 100%
 			}`
 	})
-	wf.init()
 
+
+	var num = 0
+	createView(images)
+	// 初始化加载
+	wf.loadMore()
 
 	// 加载更多
 	var ArrLen = 9
@@ -115,6 +103,22 @@
 		createView(new Array(ArrLen).fill('-'))
 		wf.loadMore()
 	})
+
+	// 创建并渲染视图
+	function createView(arr) {
+		var viewDom = ""
+		var templateDom = (index) => {
+			const imgSrc = `${images[index]}=${random(1, 10000)}`
+			num++
+			const image = ` <li><div><span>${num}</span><img src='${imgSrc}' /></div></li>`
+			const noImage = `<li><div style='height: ${random(100, 200)}px'><span>${num} --- 此block 没有图片</span></div></li>`
+			return Math.random() > 0.2 ? image : noImage
+		}
+		for (let i = 0; i < arr.length; i++) {
+			viewDom += templateDom(i)
+		}
+		$("#waterfall").append(viewDom)
+	}
 
 </script>
 

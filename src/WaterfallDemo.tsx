@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-import Waterfall from './react'
-// import Waterfall from 'waterfalljs-layout/react'
+// import Waterfall from './react'
+import Waterfall from 'waterfalljs-layout/react'
 
 const customStyle = `#waterfall li>div {
   border-radius: 8px;
@@ -21,6 +21,8 @@ const customStyle = `#waterfall li>div {
 #waterfall li>div>img {
   width: 100%
 }`
+
+console.log('Waterfall--->', Waterfall)
 
 const defimages = [
   'https://picsum.photos/640/200/?random',
@@ -51,39 +53,47 @@ export default function WaterfallDemo() {
     setImages(prev => [...prev, ...arr])
   }
   return (
-    <div
-      style={{
-        height: '600px',
-        width: '600px',
-        border: '1px solid',
-        margin: '30px auto',
-        overflowY: 'scroll'
-      }}
-      onScroll={e => console.log('scrollTop值-->',e.target.scrollTop, '----ul高度--->',ulMaxHRef.current)}
-    >
-      <Waterfall
-        columnWidth={236}
-        columnCount={2}
-        gap={24}
-        customStyle={customStyle}
-        onChangeUlMaxH={h => (ulMaxHRef.current = h)}
+    <div>
+      <div style={{ margin: '20px' }}>
+        <a href="https://codepen.io/iounini/pen/KyYPKe" target="_blank">核心思路来自这里</a><br />
+        <a
+          href="https://shuliqi.github.io/2020/11/17/%E7%80%91%E5%B8%83%E6%B5%81%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%96%B9%E5%BC%8F" target="_blank">基本实现原理</a>
+        <a href='https://codesandbox.io/s/busy-faraday-w538tc' target="_blank">codesandbox演示页面 </a>
+      </div>
+      <div
+        style={{
+          height: '600px',
+          width: '520px',
+          border: '1px solid',
+          margin: '30px auto',
+          overflowY: 'scroll'
+        }}
+        // onScroll={e => console.log('scrollTop值-->', e.target.scrollTop, '----ul高度--->', ulMaxHRef.current)}
       >
-        {images.map((item: any, index) => {
-          return (
-            <li
-              key={index}
-              onClick={() => alert('图片地址为:' + item)}
-            >
-              <div>
-                {index + 1}
-                <img src={item} alt='' />
-              </div>
-            </li>
-          )
-        })}
-      </Waterfall>
-      <div style={{ textAlign: 'center' }}>
-        <button onClick={() => handleSearchImage()} style={{ margin: '30px auto' }}>LOAD MORE</button>
+        {/* <Waterfall
+          columnWidth={236}
+          columnCount={2}
+          gap={24}
+          customStyle={customStyle}
+          onChangeUlMaxH={h => (ulMaxHRef.current = h)}
+        >
+          {images.map((item: any, index) => {
+            return (
+              <li
+                key={index}
+                onClick={() => alert('图片地址为:' + item)}
+              >
+                <div>
+                  {index + 1}
+                  <img src={item} alt='' />
+                </div>
+              </li>
+            )
+          })}
+        </Waterfall> */}
+        <div style={{ textAlign: 'center' }}>
+          <button onClick={() => handleSearchImage()} style={{ margin: '30px auto' }}>LOAD MORE</button>
+        </div>
       </div>
     </div>
   )
