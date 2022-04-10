@@ -69,3 +69,4 @@
 ![dts](./src/assets/dts.png)
 - package.json 怎么定义导出两个包，参考自 `swiper` 的定义方式 [Node.JS（新）Package.json exports 字段](https://www.cnblogs.com/taohuaya/p/15573719.html)
 - swiper 定义方式 ![swiper-package.json](./src//assets/package-json-export.png)
+- [ ] TODO: rollup react开发环境无法加载node_module里面的包
