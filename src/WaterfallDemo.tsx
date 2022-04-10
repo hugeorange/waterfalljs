@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react'
-// import Waterfall from './react'
-import Waterfall from 'waterfalljs-layout/react'
+import Waterfall from './react'
+// import Waterfall from 'waterfalljs-layout/react'
 
 const customStyle = `#waterfall li>div {
   border-radius: 8px;
@@ -70,7 +70,7 @@ export default function WaterfallDemo() {
         }}
         // onScroll={e => console.log('scrollTop值-->', e.target.scrollTop, '----ul高度--->', ulMaxHRef.current)}
       >
-        {/* <Waterfall
+        <Waterfall
           columnWidth={236}
           columnCount={2}
           gap={24}
@@ -90,7 +90,7 @@ export default function WaterfallDemo() {
               </li>
             )
           })}
-        </Waterfall> */}
+        </Waterfall>
         <div style={{ textAlign: 'center' }}>
           <button onClick={() => handleSearchImage()} style={{ margin: '30px auto' }}>LOAD MORE</button>
         </div>

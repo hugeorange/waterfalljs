@@ -20,6 +20,7 @@ export default {
     sourcemap: true,
     plugins: [
         // 不知道怎么加载 node_modules 里面的模块总是加载不到 @rollup/plugin-node-resolve 也用了，不知道为什么也不能用，打包有问题 or rollup配置有问题
+        // 又试了一下看起来有个事这个 rollup 开发环境的配置有问题，等以后有时间再来搞吧，参考 https://codesandbox.io/s/gracious-bhaskara-ixuzxx
         resolve({// 第三方文件解析
 			extensions: ['.js', '.ts', '.jsx', '.tsx']
 		}),
