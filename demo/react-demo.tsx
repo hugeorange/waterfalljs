@@ -1,5 +1,6 @@
+import ReactDOM from 'react-dom'
 import React, { useState, useRef } from 'react'
-import Waterfall from './react'
+import Waterfall from '../src/react'
 // import Waterfall from 'waterfalljs-layout/react'
 
 const customStyle = `#waterfall li>div {
@@ -37,7 +38,7 @@ const defimages = [
   'https://picsum.photos/720/640/?random',
 ]
 
-export default function WaterfallDemo() {
+function WaterfallDemo() {
   const [images, setImages] = useState<string[]>(defimages)
   const ulMaxHRef = useRef<number>(0)
 
@@ -99,3 +100,10 @@ export default function WaterfallDemo() {
   )
 }
 
+
+
+
+ReactDOM.render(
+    <WaterfallDemo/>,
+    document.getElementById('App')
+)

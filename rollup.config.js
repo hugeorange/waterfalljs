@@ -12,7 +12,7 @@ import pkg from './package.json';
 
 const isDev = process.env.NODE_ENV !== 'production';
 
-const sourcemap = isDev ? true : false;
+const sourcemap = isDev ? false : false;
 
 let plugins = [];
 if (isDev) {
@@ -48,18 +48,18 @@ export default [
         ],
         plugins: commonPlugins,
     },
-    {
-        input: 'src/react.tsx',
-        output: [
-            // { name: "Waterfall", file: "dist/react/index.min.js", format: 'umd', sourcemap },
-            // { name: "Waterfall", file: "dist/react/index.cjs.js", format: 'cjs', sourcemap },
-            { name: "Waterfall", file: "dist/react/index.esm.js", format: 'es', sourcemap: true },
-        ],
-        plugins: commonPlugins,
-        external: ['react', 'react-dom'],
-        globals: {
-            react: 'React',
-            "react-dom": "ReactDOM",
-        },
-    }
+    // {
+    //     input: 'src/react.tsx',
+    //     output: [
+    //         // { name: "Waterfall", file: "dist/react/index.min.js", format: 'umd', sourcemap },
+    //         // { name: "Waterfall", file: "dist/react/index.cjs.js", format: 'cjs', sourcemap },
+    //         // { name: "Waterfall", file: "dist/react/index.esm.js", format: 'es', sourcemap: true },
+    //     ],
+    //     plugins: commonPlugins,
+    //     external: ['react', 'react-dom'],
+    //     globals: {
+    //         react: 'React',
+    //         "react-dom": "ReactDOM",
+    //     },
+    // }
 ]

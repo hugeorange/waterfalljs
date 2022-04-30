@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Waterfall.js</title>
+</head>
+<style>
+	* {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.modal {
+		margin-top: 50px;
+		width: 520px;
+		height: 600px;
+		border: 1px solid;
+		overflow-y: scroll;
+		position: relative;
+	}
+
+	.load-more {
+		text-align: center;
+		margin: 30px auto;
+	}
+</style>
+
+<body>
+	<div style="margin: 20px">
+		<a href="https://codepen.io/iounini/pen/KyYPKe" target="_blank">position版本核心思路</a><br />
+		<a href="https://juejin.cn/post/6844904004720263176#heading-6" target="_blank">grid布局版本核心思路</a><br />
+	</div>
+
+	<div style="display: flex; justify-content: space-around;">
+		<div>
+			<h3>grid版本：</h3>
+			<div class="modal">
+				<ul id="waterfall-grid"></ul>
+				<div id="load-more-grid" class="load-more">
+					<button>加载更多</button>
+				</div>
+			</div>
+		</div>
+
+		<div>
+			<h3>position版本</h3>
+			<div class="modal">
+				<ul id="waterfall-position"></ul>
+				<div id="load-more-position" class="load-more">
+					<button>加载更多</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+<!-- <script src="https://unpkg.com/browse/waterfalljs-layout@latest/dist/waterfalljs-layout.esm.js"></script> -->
+<script src="../dist/waterfalljs-layout.min.js"></script>
+
+<script type="text/javascript">
+	const images = [
+		"https://picsum.photos/640/200/?random",
+		"https://picsum.photos/360/640/?random",
+		"https://picsum.photos/480/720/?random",
+		"https://picsum.photos/480/640/?random",
+		"https://picsum.photos/360/?random",
+		"https://picsum.photos/360/520/?random",
+		"https://picsum.photos/520/360/?random",
+		"https://picsum.photos/520/360/?random",
+		"https://picsum.photos/520/360/?random",
+		"https://picsum.photos/720/640/?random"
+	]
+
+	function random(min, max) {
+		return min + Math.floor(Math.random() * (max - min + 1));
+	}
+
+	let num = 0
+	// 创建UI
+	function createView() {
+		var arr = new Array(9).fill('-')
+		var viewDom = ""
+		var templateDom = (index) => {
+			const imgSrc = `${images[index]}=${random(1, 10000)}`
+			num++
+			const image = ` <li><div><span>${num}</span><img src='${imgSrc}' /></div></li>`
+			const noImage = `<li><div style='height: ${random(100, 200)}px'><span>${num} --- 此block 没有图片</span></div></li>`
+			return Math.random() > 0.2 ? image : noImage
+		}
+		for (let i = 0; i < arr.length; i++) {
+			viewDom += templateDom(i)
+		}
+		return viewDom
+	}
+
+</script>
+<!-- grid 布局核心代码 -->
+<script>
+	// 初始化插件
+	const wfGrid = Waterfall({
+		mode: 'grid',
+		el: '#waterfall-grid',
+		columnWidth: 236,
+		columnGap: 24,
+		rowGap: 24,
+		delay: 800,
+		customStyle: `#waterfall-grid li>div {
+				border-radius: 8px;
+				font-size: 20px;
+				overflow: hidden;
+				color: rgba(0, 0, 0, 0.6);
+				padding: 6px;
+				background: rgb(255, 255, 255);
+				box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+				transition: all 0.3s;
+			}
+			#waterfall-grid li>div:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+				transition: all 0.3s;
+			}
+			#waterfall-grid li>div>img {
+				width: 100%
+			}`
+	})
+
+	var viewDom = createView()
+	$("#waterfall-grid").append(viewDom)
+	// 初始化加载
+	wfGrid.load()
+
+	// 加载更多
+	$('#load-more-grid').click(() => {
+		var viewDom = createView()
+		$("#waterfall-grid").append(viewDom)
+		wfGrid.load()
+	})
+
+</script>
+<!-- position布局核心代码 -->
+<script>
+	const wfPosition = Waterfall({
+		mode: 'position',
+		el: '#waterfall-position',
+		columnWidth: 236,
+		columnGap: 24,
+		rowGap: 24,
+		delay: 800,
+		customStyle: `#waterfall-position li>div {
+				border-radius: 8px;
+				font-size: 20px;
+				overflow: hidden;
+				color: rgba(0, 0, 0, 0.6);
+				padding: 6px;
+				background: rgb(255, 255, 255);
+				box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+				transition: all 0.5s;
+			}
+			#waterfall-position li>div:hover {
+				transform: translateY(-6px);
+				box-shadow: 0 30px 50px rgba(0, 0, 0, 0.3);
+				transition: all 0.3s
+			}
+			#waterfall-position li>div>img {
+				width: 100%
+			}`
+	})
+
+	var viewDom = createView()
+	$("#waterfall-position").append(viewDom)
+	// 初始化加载
+	wfPosition.load()
+
+
+	// 加载更多
+	$('#load-more-position').click(() => {
+		var viewDom = createView()
+		$("#waterfall-position").append(viewDom)
+		wfPosition.load()
+	})
+</script>
+
+</html>
