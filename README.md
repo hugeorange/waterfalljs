@@ -1,7 +1,7 @@
 # waterfall-js 瀑布流布局
 - 演示图 ![waterfalljs](./src/assets/waterfallGif2.gif)
 - 核心思路借鉴自 [position版本](https://codepen.io/iounini/pen/KyYPKe)、[grid版本](https://juejin.cn/post/6844904004720263176#heading-6)
-- [演示页面-index.html](./src//index.html) 
+- [演示页面-index.html](./demo/index.html) 
 - [React 版本 codesandbox 演示页面](https://codesandbox.io/s/busy-faraday-w538tc)
 
 ### 使用方式
