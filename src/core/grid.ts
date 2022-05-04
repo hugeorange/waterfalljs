@@ -9,7 +9,6 @@ export default class Waterfall {
   containerWidth: number
   columnCount: number
   handleTimer: any
-  ulMaxH: number
   prevImageLength: number
   prevLiNodesLength: number
   divItemNodes: Element[]
@@ -24,8 +23,6 @@ export default class Waterfall {
     this.columnCount = config.columnCount || 0
     // 轮询计时器
     this.handleTimer = null
-    // 容器ul的最大高度
-    this.ulMaxH = 0
 
     // 辅助优化措施
     this.divItemNodes = []
@@ -39,7 +36,7 @@ export default class Waterfall {
   }
   init() {
     if (!this.container) {
-      throw 'ul container element is not exist'
+      throw `container element id:${this.config.el} is not exist`
     }
     const { el, columnWidth, customStyle } = this.config
     this.containerWidth = this.container.offsetWidth
@@ -55,13 +52,14 @@ export default class Waterfall {
     const liNodes = this.container.querySelectorAll('li')
     const divItemNodes = this.container.querySelectorAll('li>div')
     if (divItemNodes?.length <= 0) {
-      console.error('list li>div element is not exist')
+      throw `container element id:${this.config.el}>li is not exist`
       return
     }
     const diffLen = this.prevLiNodesLength - liNodes.length
     this.divItemNodes = Array.from(divItemNodes).slice(diffLen)
     this.liNodes = Array.from(liNodes).slice(diffLen)
     this.prevLiNodesLength = liNodes.length
+
     this.initLayout()
     this.initPolling()
   }
@@ -73,21 +71,14 @@ export default class Waterfall {
     let list = []
     // 初始化li列表
     for (let i = 0; i < divItemNodes.length; i++) {
-      const h = (divItemNodes[i] as HTMLElement).offsetHeight // 耗时操作待优化
-
-      list.push({ index: i, height: h })
-      console.log('我执行了', list)
+      const h = (divItemNodes[i] as HTMLElement).offsetHeight
+      list.push(h)
     }
 
     for (let i = 0; i < liNodes.length; i++) {
       const item: any = liNodes[i]
-      // const divItem: any = divItemNodes[i]
-      const spanH = list[i].height
+      const spanH = list[i]
       item.style.gridRowEnd = `span ${parseInt(spanH) + this.config.rowGap}`
-      item.style.height = `${spanH}px`
-    }
-
-    for (let i = 0; i < liNodes.length; i++) {
       if (!liNodes[i].classList.contains('show')) {
         liNodes[i].classList.add('show')
       }
@@ -111,7 +102,10 @@ export default class Waterfall {
         this.handleTimer && clearInterval(this.handleTimer)
         this.initLayout()
         setTimeout(() => {
-          this.config?.onChangeUlMaxH?.(this.ulMaxH)
+          if (this.config.onChangeUlMaxH) {
+            const ulMaxH = this.container.offsetHeight
+            this.config.onChangeUlMaxH(ulMaxH)
+          }
         }, 20)
       })
       .catch(err => {

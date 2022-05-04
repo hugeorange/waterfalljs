@@ -11,7 +11,7 @@ import serve from 'rollup-plugin-serve'
 const path = require('path')
 
 export default {
-    input: 'src/react-demo.tsx',
+    input: 'demo/react-demo.tsx',
     output: {
         format: 'umd',
         file: path.resolve(__dirname, 'dist-react/index.js'), // 出口文件

@@ -16,6 +16,8 @@ export default class Waterfall {
   handleTimer: any
   ulMaxH: number
   prevImageLength: number
+  prevLiNodesLength: number
+  lastItemsBottom: number[]
   constructor(config: IwaterfallProps) {
     this.config = config
     // 容器
@@ -40,13 +42,16 @@ export default class Waterfall {
     // 辅助优化措施
     // 上一次获取图片数量
     this.prevImageLength = 0
-
+    // 上一次加载li元素数量
+    this.prevLiNodesLength = 0
+    // 上一轮最后一组数据的bottom
+    this.lastItemsBottom = [0, 0]
     // 初始化配置
     this.init()
   }
   init() {
     if (!this.container) {
-      throw 'container container element is not exist'
+      throw `container element id:${this.config.el} is not exist`
     }
     const { el, columnWidth, customStyle } = this.config
     this.containerWidth = this.container.offsetWidth
@@ -59,16 +64,19 @@ export default class Waterfall {
    * 初始化数据或加载更多时调用
    */
   public load() {
+    const liNodes = this.container.querySelectorAll('li') as unknown as HTMLElement[]
+    if (liNodes?.length <= 0) {
+      throw `container element id:${this.config.el}>li is not exist`
+    }
+    const diffLen = this.prevLiNodesLength - liNodes.length
+    this.liNodes = Array.from(liNodes).slice(diffLen)
+    this.prevLiNodesLength = liNodes.length
+    this.lastItemsBottom = this.colList.map(item => item[item.length - 1]?.bottom)
     this.initLayout()
     this.initPolling()
   }
 
   initLayout() {
-    this.liNodes = this.container.querySelectorAll('li') as unknown as HTMLElement[]
-    if (this.liNodes?.length <= 0) {
-      console.error('itemList --> li element is not exist')
-      return
-    }
     // 置空存储
     this.itemList = []
     this.colList = []
@@ -78,9 +86,8 @@ export default class Waterfall {
       this.colList.push([])
     }
 
-    // 初始化li列表
     for (let i = 0; i < this.liNodes.length; i++) {
-      const h = this.liNodes[i].offsetHeight + this.config.rowGap // 耗时操作待优化
+      const h = this.liNodes[i].offsetHeight + this.config.rowGap
       this.itemList.push({
         index: i,
         bottom: h,
@@ -96,32 +103,27 @@ export default class Waterfall {
 
     // 智能排列
     for (let i = 0; i < this.liNodes.length; i++) {
-      if (i < this.columnCount) {
-        // 第一行排列
-        colList[i].push(itemList[i])
-      } else {
-        // 当前项的li的高度
-        const liItemHeight = itemList[i].height
-        // 当前bottom值
-        let curBottom = 0
-        // 列索引
-        let colIndex = 0
-        for (let j = 0; j < colList.length; j++) {
-          // 当前列的长度
-          const curColLastIndex = colList[j].length - 1
-          // 每一列的最后一个元素的bottom值
-          const lastItemBottom = colList[j][curColLastIndex].bottom
-          // 最新的待塞进view的li元素
-          const newItemBottom = lastItemBottom + liItemHeight
-          // 遍历每一列找出bottom值最小的那一列，然后将新的元素塞进这一列
-          if (curBottom == 0 || newItemBottom < curBottom) {
-            curBottom = newItemBottom
-            colIndex = j
-          }
+      // 当前项的li的高度
+      const liItemHeight = itemList[i].height
+      // 当前bottom值
+      let curBottom = 0
+      // 列索引
+      let colIndex = 0
+      for (let j = 0; j < colList.length; j++) {
+        // 当前列的长度
+        const curColLastIndex = colList[j].length - 1
+        // 每一列的最后一个元素的bottom值
+        const lastItemBottom = colList[j]?.[curColLastIndex]?.bottom || this.lastItemsBottom[j] || 0
+        // 最新的待塞进view的li元素
+        const newItemBottom = lastItemBottom + liItemHeight
+        // 遍历每一列找出bottom值最小的那一列，然后将新的元素塞进这一列
+        if (curBottom == 0 || newItemBottom < curBottom) {
+          curBottom = newItemBottom
+          colIndex = j
         }
-        itemList[i].bottom = curBottom
-        colList[colIndex].push(itemList[i])
       }
+      itemList[i].bottom = curBottom
+      colList[colIndex].push(itemList[i])
     }
     this.renderView()
   }
@@ -171,7 +173,6 @@ export default class Waterfall {
 
     this.loadImages()
       .then(() => {
-        // console.log(this.liLeft, this.liNodes, this.itemList)
         this.handleTimer && clearInterval(this.handleTimer)
         this.initLayout()
         setTimeout(() => {

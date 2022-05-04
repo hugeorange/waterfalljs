@@ -43,23 +43,20 @@ export default [
         input: 'src/index.ts',
         output: [
             { name: "Waterfall", file: pkg.unpkg, format: 'umd', sourcemap },
-            { name: "Waterfall", file: pkg.main, format: 'cjs', sourcemap },
             { name: "Waterfall", file: pkg.module, format: 'es', sourcemap },
         ],
         plugins: commonPlugins,
     },
-    // {
-    //     input: 'src/react.tsx',
-    //     output: [
-    //         // { name: "Waterfall", file: "dist/react/index.min.js", format: 'umd', sourcemap },
-    //         // { name: "Waterfall", file: "dist/react/index.cjs.js", format: 'cjs', sourcemap },
-    //         // { name: "Waterfall", file: "dist/react/index.esm.js", format: 'es', sourcemap: true },
-    //     ],
-    //     plugins: commonPlugins,
-    //     external: ['react', 'react-dom'],
-    //     globals: {
-    //         react: 'React',
-    //         "react-dom": "ReactDOM",
-    //     },
-    // }
+    {
+        input: 'src/react.tsx',
+        output: [
+            { name: "Waterfall", file: "dist/react/index.esm.js", format: 'es', sourcemap: true }
+        ],
+        plugins: commonPlugins,
+        external: ['react', 'react-dom'],
+        globals: {
+            react: 'React',
+            "react-dom": "ReactDOM",
+        },
+    }
 ]

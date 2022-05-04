@@ -3,18 +3,26 @@ import React, { ReactElement, useEffect, useRef } from 'react'
 import Waterfall from './index'
 
 interface Iprops {
+  mode?: 'position' | 'grid'
+  el?: string
   children?: ReactElement[]
   columnWidth: number
   columnCount: number
-  gap: number
+  columnGap: number
+  rowGap: number
+  delay?: number
   customStyle?: string
   onChangeUlMaxH?: (h: number) => void
 }
 export default function WaterfallComps({
   children,
+  el="#react-waterfall-comps",
+  mode='position',
   columnWidth,
   columnCount,
-  gap,
+  columnGap,
+  rowGap,
+  delay = 500,
   customStyle='',
   onChangeUlMaxH,
 }: Iprops): ReactElement {
@@ -22,24 +30,24 @@ export default function WaterfallComps({
 
   useEffect(() => {
     if (wfRef.current) return
-    wfRef.current = new Waterfall({
-      el: '#waterfall',
-      columnWidth: columnWidth,
-      columnCount: columnCount,
-      gap: gap,
-      delay: 500,
+    wfRef.current = Waterfall({
+      mode,
+      el,
+      columnWidth,
+      columnCount,
+      columnGap,
+      rowGap,
+      delay,
       customStyle,
-      onChangeUlMaxH: h => {
-        onChangeUlMaxH?.(h)
-      },
+      onChangeUlMaxH: h => onChangeUlMaxH?.(h)
     })
   }, [])
 
   useEffect(() => {
     if (children.length) {
-      wfRef.current?.loadMore?.()
+      wfRef.current?.load?.()
     }
   }, [children.length])
   
-  return <ul id='waterfall'>{children}</ul>
+  return <ul id={el.slice(1)}>{children}</ul>
 }

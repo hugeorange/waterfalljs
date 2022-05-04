@@ -28,7 +28,7 @@ export function initWaterfallPositionStyle(
           position: absolute;
           width: ${columnWidth}px;
           left: 0;
-          transform: translateY(200px)
+          transform: translateY(200px);
       }
       ${container}>li.show {
         transform: translateY(0);
@@ -59,7 +59,7 @@ export function initWaterfallGridStyle(
       }
       ${container}>li {
           width: ${columnWidth}px;
-          transform: translateY(200px)
+          transform: translateY(200px);
       }
       ${container}>li.show {
         transform: translateY(0);
