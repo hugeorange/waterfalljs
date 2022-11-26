@@ -86,7 +86,7 @@
 | rowGap    | 每列之间的间隙 | number |  24  |   单位px|
 | delay    | 轮询排布的间隔时间 | number | 500 |单位 ms，轮询获取元素高度的间隔时间|
 | customStyle | 自定义样式 | string | -|   |
-| onChangeUlMaxH | 实时获取容器高度 | (h: number) => void  | - |可在上拉加载场景中使用|
+| onChangeUlMaxH | 实时获取容器高度 | (h: number) => void  | - | 配合在容器中监听 scroll 实现滚动加载功能 |
 
 ## 注意事项
 - 使用UMD方式时 ==> html元素层级关系必须是 `ul#el>li>div> 自己需展示的内容`
